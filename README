@@ -1,0 +1,36 @@
+Despa Diana-Alexandra 321CA
+
+PROTOCOALE DE COMUNICATIE: Tema #4 - DNS Client
+
+	In implementarea temei am utilizat foarte mult pointeri pentru a parcurge
+mesajele DNS, atat trimise cat si primite. Am considerat ca astfel pot accesa
+mai usor octetii care apartin portiunilor de dimensiune variabila din mesaje, si
+pot trece de asemenea mai usor de la o portiune la alta, ele fiind concatenate.
+	Am folosit protocolul TCP pentru comunicarea cu server-ul, astfel ca toate
+mesajele sunt prefixate cu doi octeti care contin dimensiunea totala a mesajului
+excluzand cei doi octeti din prefix.
+	Dupa ce formez header-ul si query-ul unui mesaj, completand toate campurile,
+afisez mesajul in format hexazecimal in fisierul "message.log". Campul qname din
+structura unui query este reprezentat de stringul format pe baza adresei cautate,
+avand fiecare nume de domeniu prefixat cu un octet care contine dimensiunea
+denumirii domeniului. Apoi incerc sa trimit mesajul unuia dintre serverele cu
+adresa in fisierul "dns_servers.conf". Atunci cand primesc un raspuns valid din
+partea unui server, parcurg si afisez in fisierul "dns.log" toate inregistrarile
+din campurile "Answer", "Authority" si "Additional" ale raspunsului. Pentru
+fiecare inregistrare afisez numele, clasa si tipul, apoi, in functie de tip,
+informatiile corespunzatoare, conform enuntului.
+	Stiu ca mesajele sunt comprimate, deci pentru extragerea adreselor/numelor
+inregistrarilor trebuie sa verific daca in zona unde ar trebui sa se afle
+acestea exista pointeri la alte locatii din mesaj, caz in care parcurg locatiile
+espective si retin domeniile care formeaza o adresa (functia "GetName"). Acelasi
+procedeu se aplica si atunci cand, printre informatiile unui anumit tip de
+inregistrare, este si o adresa pe care eu trebuie sa o aflu si sa o afisez.
+Adresa cu domenii prefixate cu octetul de dimensiune este apoi transformata
+intr-o adresa cu domenii delimitate cu '.'.
+	Am setat timeout pentru receive pe socketul de comunicare cu server-ul la 5
+secunde, astfel ca, daca nu primesc niciun mesaj in intervalul de timp respectiv
+inchid conexiunea cu acel server, ma conectez la urmatorul din lista din
+fisierul "dns_servers.conf" si il interoghez pe acela.
+	Am considerat dimensiunea maxima a unui mesaj DNS de 514 octeti, avand in
+vedere faptul ca folosesc protoculul TCP si mesajele sunt prefixate de doi octeti
+de dimensiune (pentru UDP dimensiunea maxima este 512, conform RFC 1035).
