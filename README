@@ -1,6 +1,4 @@
-Despa Diana-Alexandra 321CA
-
-PROTOCOALE DE COMUNICATIE: Tema #4 - DNS Client
+DNS Client
 
 	In implementarea temei am utilizat foarte mult pointeri pentru a parcurge
 mesajele DNS, atat trimise cat si primite. Am considerat ca astfel pot accesa
